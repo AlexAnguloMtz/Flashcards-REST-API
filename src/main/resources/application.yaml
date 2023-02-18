@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:${database.provider}://${database.host}/${database.schema}
+    username: ${database.username}
+    password: ${database.password}
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    show-sql: true
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+jwt:
+  secret: ${jwt.secret}
