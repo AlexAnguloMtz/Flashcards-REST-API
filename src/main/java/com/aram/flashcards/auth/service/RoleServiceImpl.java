@@ -1,7 +1,7 @@
 package com.aram.flashcards.auth.service;
 
 
-import com.aram.flashcards.auth.exception.NotFoundException;
+import com.aram.flashcards.common.exception.NotFoundException;
 import com.aram.flashcards.auth.model.AppRole;
 import com.aram.flashcards.auth.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,6 @@ class RoleServiceImpl implements RoleService {
     @Override
     public AppRole findByName(String name) {
         return roleRepository.findByName(name)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("Could not find role with name = %s".formatted(name)));
     }
 }

@@ -1,6 +1,6 @@
 package com.aram.flashcards.core.service;
 
-import com.aram.flashcards.auth.exception.NotFoundException;
+import com.aram.flashcards.common.exception.NotFoundException;
 import com.aram.flashcards.auth.service.UserService;
 import com.aram.flashcards.common.AbstractService;
 import com.aram.flashcards.common.IdGenerator;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Map;
 
 import static java.util.Comparator.comparing;
@@ -78,7 +77,8 @@ class StudySessionServiceImpl extends AbstractService implements StudySessionSer
     }
 
     private StudySession findById(String id) {
-        return studySessionRepository.findById(id).orElseThrow(NotFoundException::new);
+        return studySessionRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Could not find study session with id = %s".formatted(id)));
     }
 
     private void checkPreconditions(StudySessionCreationRequest request) {

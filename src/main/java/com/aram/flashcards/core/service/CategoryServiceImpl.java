@@ -1,6 +1,7 @@
 package com.aram.flashcards.core.service;
 
-import com.aram.flashcards.auth.exception.NotFoundException;
+import com.aram.flashcards.common.exception.ConflictException;
+import com.aram.flashcards.common.exception.NotFoundException;
 import com.aram.flashcards.common.IdGenerator;
 import com.aram.flashcards.core.repository.CategoryRepository;
 import com.aram.flashcards.core.dto.CategoryCreationRequest;
@@ -20,12 +21,16 @@ class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public Category save(CategoryCreationRequest creationRequest) {
+        if (existsByName(creationRequest.name())) {
+            throw new ConflictException("Category with name = %s already exists".formatted(creationRequest.name()));
+        }
         return categoryRepository.save(categoryFrom(creationRequest));
     }
 
     @Override
     public Category findByName(String name) {
-        return categoryRepository.findByName(name).orElseThrow(NotFoundException::new);
+        return categoryRepository.findByName(name)
+                .orElseThrow(() -> new NotFoundException("Could not find category with name = %s".formatted(name)));
     }
 
     @Override
@@ -44,6 +49,10 @@ class CategoryServiceImpl implements CategoryService {
 
     private String nextId() {
         return idGenerator.nextId();
+    }
+
+    private boolean existsByName(String name) {
+        return categoryRepository.existsByName(name);
     }
 
 }

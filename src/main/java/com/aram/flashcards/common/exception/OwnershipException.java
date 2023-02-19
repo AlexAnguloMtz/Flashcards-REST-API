@@ -1,9 +1,18 @@
 package com.aram.flashcards.common.exception;
 
-import com.aram.flashcards.auth.exception.AppException;
+import org.springframework.http.HttpStatus;
 
-public class OwnershipException extends AppException {
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+
+public class OwnershipException extends BaseException {
+
     public OwnershipException(String message) {
         super(message);
     }
+
+    @Override
+    public HttpStatus status() {
+        return FORBIDDEN;
+    }
+
 }

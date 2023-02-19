@@ -19,3 +19,7 @@ logging:
 
 jwt:
   secret: fdAFEAEFafSDFK32940JDSF234F22Rf2Ff2FakoEOKenR342nOSF90564KFD2093
+
+json:
+  roles: /json/roles.json
+  categories: /json/categories.json

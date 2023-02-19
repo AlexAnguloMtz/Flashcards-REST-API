@@ -3,10 +3,10 @@ package com.aram.flashcards.auth.service;
 import com.aram.flashcards.auth.dto.LoginRequest;
 import com.aram.flashcards.auth.dto.SignupRequest;
 import com.aram.flashcards.auth.dto.AuthResponse;
-import com.aram.flashcards.auth.exception.AppException;
-import com.aram.flashcards.auth.exception.ConflictException;
+import com.aram.flashcards.common.exception.BaseException;
+import com.aram.flashcards.common.exception.ConflictException;
 import com.aram.flashcards.auth.exception.InvalidCredentialsException;
-import com.aram.flashcards.auth.exception.NotFoundException;
+import com.aram.flashcards.common.exception.NotFoundException;
 import com.aram.flashcards.auth.model.AppRole;
 import com.aram.flashcards.auth.model.AppUser;
 import com.aram.flashcards.auth.repository.UserRepository;
@@ -38,7 +38,7 @@ class UserServiceImpl implements UserService {
     @Override
     public AuthResponse signup(SignupRequest request) {
         if (existsByUsernameOrEmail(userFrom(request))) {
-            throw new ConflictException();
+            throw new ConflictException("User with these credentials already exists");
         }
         AppUser user = userFrom(request);
         return responseFrom(save(user));
@@ -53,7 +53,8 @@ class UserServiceImpl implements UserService {
 
     @Override
     public AppUser findByUsernameOrEmail(String usernameOrEmail) {
-        return findByUsernameOrEmail(usernameOrEmail, NotFoundException::new);
+        return findByUsernameOrEmail(usernameOrEmail,
+                () -> new NotFoundException("Could not find user with credentials = %s".formatted(usernameOrEmail)));
     }
 
     @Override
@@ -74,12 +75,12 @@ class UserServiceImpl implements UserService {
 
     private void verifyPasswordsMatch(LoginRequest request, AppUser user) {
         if (!doPasswordsMatch(request.getPassword(), user.getPassword())) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("Invalid credentials");
         }
     }
 
     private AppUser findUserFrom(LoginRequest request) {
-        return findByUsernameOrEmail(request.getUsernameOrEmail(), InvalidCredentialsException::new);
+        return findByUsernameOrEmail(request.getUsernameOrEmail(), () -> new InvalidCredentialsException("Invalid credentials"));
     }
 
     private boolean doPasswordsMatch(String requestPassword, String realPassword) {
@@ -90,7 +91,7 @@ class UserServiceImpl implements UserService {
         return userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail());
     }
 
-    private AppUser findByUsernameOrEmail(String usernameOrEmail, Supplier<AppException> exception) {
+    private AppUser findByUsernameOrEmail(String usernameOrEmail, Supplier<BaseException> exception) {
         return userRepository
                 .findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(exception);
