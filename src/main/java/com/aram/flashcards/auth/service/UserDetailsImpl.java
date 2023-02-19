@@ -11,9 +11,14 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-class UserDetailsImpl implements UserDetails {
+class UserDetailsImpl implements CustomUserDetails {
 
     private final AppUser user;
+
+    @Override
+    public String getId() {
+        return user.getId();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

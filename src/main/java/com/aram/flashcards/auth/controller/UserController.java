@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -47,7 +48,7 @@ public class UserController {
     @PreAuthorize("#username == authentication.name")
     public ResponseEntity<?> delete(@PathVariable String username) {
         userService.deleteByUsername(username);
-        return ResponseEntity.noContent().build();
+        return noContent().build();
     }
 
 }

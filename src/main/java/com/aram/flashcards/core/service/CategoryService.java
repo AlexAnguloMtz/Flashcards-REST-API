@@ -9,4 +9,7 @@ public interface CategoryService {
 
     Category save(CategoryCreationRequest categoryCreationRequest);
 
+    Category findByName(String name);
+
+    boolean existsById(String categoryId);
 }

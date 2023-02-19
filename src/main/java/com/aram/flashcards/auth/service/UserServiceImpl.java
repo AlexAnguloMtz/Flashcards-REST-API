@@ -11,6 +11,8 @@ import com.aram.flashcards.auth.model.AppRole;
 import com.aram.flashcards.auth.model.AppUser;
 import com.aram.flashcards.auth.repository.UserRepository;
 import com.aram.flashcards.auth.configuration.TokenProvider;
+import com.aram.flashcards.common.IdGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.function.Supplier;
 
 @Service
+@Slf4j
 class UserServiceImpl implements UserService {
 
     @Autowired
@@ -29,14 +32,16 @@ class UserServiceImpl implements UserService {
     private TokenProvider tokenProvider;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private IdGenerator idGenerator;
 
     @Override
     public AuthResponse signup(SignupRequest request) {
-        if (exists(userFrom(request))) {
+        if (existsByUsernameOrEmail(userFrom(request))) {
             throw new ConflictException();
         }
-        save(userFrom(request));
-        return responseFrom(userFrom(request));
+        AppUser user = userFrom(request);
+        return responseFrom(save(user));
     }
 
     @Override
@@ -62,6 +67,11 @@ class UserServiceImpl implements UserService {
         userRepository.deleteByUsername(username);
     }
 
+    @Override
+    public boolean existsById(String userId) {
+        return userRepository.existsById(userId);
+    }
+
     private void verifyPasswordsMatch(LoginRequest request, AppUser user) {
         if (!doPasswordsMatch(request.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException();
@@ -76,7 +86,7 @@ class UserServiceImpl implements UserService {
         return passwordEncoder.matches(requestPassword, realPassword);
     }
 
-    private boolean exists(AppUser user) {
+    private boolean existsByUsernameOrEmail(AppUser user) {
         return userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail());
     }
 
@@ -102,11 +112,16 @@ class UserServiceImpl implements UserService {
     }
 
     private AuthResponse responseFrom(AppUser user) {
-        return new AuthResponse(tokenFor(user));
+        return new AuthResponse(
+                tokenFor(user),
+                user.getId(),
+                user.getUsername(),
+                user.getEmail()
+        );
     }
 
     private String nextId() {
-        return "1";
+        return idGenerator.nextId();
     }
 
     private String encodePassword(String password) {

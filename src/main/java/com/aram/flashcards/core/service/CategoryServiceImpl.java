@@ -1,13 +1,13 @@
 package com.aram.flashcards.core.service;
 
+import com.aram.flashcards.auth.exception.NotFoundException;
+import com.aram.flashcards.common.IdGenerator;
 import com.aram.flashcards.core.repository.CategoryRepository;
 import com.aram.flashcards.core.dto.CategoryCreationRequest;
 import com.aram.flashcards.core.model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 class CategoryServiceImpl implements CategoryService {
@@ -23,8 +23,18 @@ class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(categoryFrom(creationRequest));
     }
 
+    @Override
+    public Category findByName(String name) {
+        return categoryRepository.findByName(name).orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public boolean existsById(String categoryId) {
+        return categoryRepository.existsById(categoryId);
+    }
+
     private Category categoryFrom(CategoryCreationRequest creationRequest) {
-        return new Category(nextId(), creationRequest.getName());
+        return new Category(nextId(), creationRequest.name());
     }
 
     @Override

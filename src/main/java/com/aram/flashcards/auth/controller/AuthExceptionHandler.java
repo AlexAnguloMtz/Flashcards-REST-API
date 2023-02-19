@@ -4,6 +4,7 @@ import com.aram.flashcards.auth.exception.ConflictException;
 import com.aram.flashcards.auth.exception.InvalidCredentialsException;
 import com.aram.flashcards.auth.exception.NotFoundException;
 import com.aram.flashcards.common.controller.ApiErrorMessage;
+import com.aram.flashcards.common.exception.OwnershipException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,8 +27,8 @@ public class AuthExceptionHandler {
     @ResponseBody
     @ResponseStatus(NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
-    public String handle(NotFoundException exception) {
-        return exception.getMessage();
+    public ApiErrorMessage handle(NotFoundException exception) {
+        return new ApiErrorMessage(exception.getMessage());
     }
 
     @ResponseBody
@@ -49,6 +50,13 @@ public class AuthExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ApiErrorMessage handle(AuthenticationException exception) {
         return new ApiErrorMessage("Cannot access secured endpoint without valid jwt");
+    }
+
+    @ResponseBody
+    @ResponseStatus(FORBIDDEN)
+    @ExceptionHandler(OwnershipException.class)
+    public ApiErrorMessage handle(OwnershipException exception) {
+        return new ApiErrorMessage(exception.getMessage());
     }
 
     private String firstErrorMessageFrom(MethodArgumentNotValidException exception) {

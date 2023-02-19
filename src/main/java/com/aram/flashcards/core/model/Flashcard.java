@@ -1,14 +1,10 @@
 package com.aram.flashcards.core.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -16,16 +12,12 @@ import static lombok.AccessLevel.PRIVATE;
 @Entity
 @RequiredArgsConstructor
 @NoArgsConstructor(access = PRIVATE, force = true)
-public class StudySession {
+public class Flashcard {
 
     @Id
     private final String id;
-    private final String name;
-    private final String userId;
-    private final String categoryId;
-
-    public boolean hasName(String name) {
-        return this.name.equals(name);
-    }
+    private final String question;
+    private final String answer;
+    private final String studySessionId;
 
 }

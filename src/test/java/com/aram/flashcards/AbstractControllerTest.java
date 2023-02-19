@@ -1,15 +1,18 @@
 package com.aram.flashcards;
 
 import com.aram.flashcards.auth.dto.AuthResponse;
+import com.aram.flashcards.auth.dto.LoginRequest;
 import com.aram.flashcards.auth.dto.SignupRequest;
+import com.aram.flashcards.auth.model.AppUser;
 import com.aram.flashcards.auth.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 
 import java.util.List;
 
-public class AbstractControllerTest {
+public abstract class AbstractControllerTest {
 
     private final ObjectMapper serializer;
     private final UserService userService;
@@ -17,6 +20,14 @@ public class AbstractControllerTest {
     public AbstractControllerTest(UserService userService) {
         this.userService = userService;
         serializer = new ObjectMapper();
+    }
+
+    protected String saveNewUserAndReturnToken() {
+        return saveNewUserAndReturnResponse().getJwt();
+    }
+
+    protected AuthResponse saveNewUserAndReturnResponse() {
+        return signup(newUserWithRole(regularUser()));
     }
 
     protected SignupRequest newUserWithRole(String roleName) {
@@ -36,7 +47,6 @@ public class AbstractControllerTest {
         return "some_email@gmail.com";
     }
 
-
     protected String validPassword() {
         return "Password99##";
     }
@@ -53,12 +63,8 @@ public class AbstractControllerTest {
         return userService.signup(request);
     }
 
-    protected String token(AuthResponse response) {
+    protected String tokenFrom(AuthResponse response) {
         return response.getJwt();
-    }
-
-    protected String bearerPrefix() {
-        return "Bearer %s";
     }
 
     protected String json(Object object) {
@@ -69,21 +75,17 @@ public class AbstractControllerTest {
         }
     }
 
-    protected  <T> T fromJson(String json, Class<T> clazz) {
-        try {
-            return serializer.readValue(json, clazz);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Unable to parse json " + json);
-        }
-    }
-
-    protected  <T> List<T> listFromJson(String json, Class<T> clazz) {
+    protected  <T> List<T> listFromJsonArray(String json, Class<T> clazz) {
         try {
             ObjectReader reader = serializer.readerForListOf(clazz);
             return reader.readValue(json);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Could not parse json list: %s".formatted(json));
         }
+    }
+
+    protected String headerWith(String token) {
+        return "Bearer %s".formatted(token);
     }
 
 }

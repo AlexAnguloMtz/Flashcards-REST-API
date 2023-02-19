@@ -1,5 +1,6 @@
 package com.aram.flashcards.auth.configuration;
 
+import com.aram.flashcards.auth.service.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -77,11 +78,13 @@ public class JwtFilter extends OncePerRequestFilter {
         return userDetailsService.loadUserByUsername(username);
     }
 
-    private Authentication authenticationFrom(UserDetails user) {
-        return new UsernamePasswordAuthenticationToken(
-                user.getUsername(),
+    private Authentication authenticationFrom(UserDetails userDetails) {
+        CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
+        return new CustomAuthenticationToken(
+                customUserDetails.getId(),
+                userDetails.getUsername(),
                 null,
-                user.getAuthorities()
+                userDetails.getAuthorities()
         );
     }
 

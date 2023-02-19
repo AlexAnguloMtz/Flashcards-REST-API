@@ -1,10 +1,18 @@
 package com.aram.flashcards.core.service;
 
 import com.aram.flashcards.core.dto.StudySessionCreationRequest;
-import com.aram.flashcards.core.model.StudySession;
+import com.aram.flashcards.core.dto.StudySessionResponse;
+import com.aram.flashcards.core.dto.StudySessionUpdateRequest;
+
+import java.util.Map;
 
 public interface StudySessionService {
 
-    StudySession save(StudySessionCreationRequest request);
+    StudySessionResponse save(StudySessionCreationRequest request);
 
+    void deleteById(String id);
+
+    Iterable<StudySessionResponse> filter(Map<String, String> parameters);
+
+    StudySessionResponse update(String id, StudySessionUpdateRequest request);
 }

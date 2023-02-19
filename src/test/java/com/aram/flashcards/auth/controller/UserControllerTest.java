@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -33,12 +34,16 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void okWithJwtWhenUserSignsUpWithValidCredentials() throws Exception {
+    void userCanSignUpWithValidCredentials() throws Exception {
+        var request = new SignupRequest(validUsername(), validEmail(), validPassword(), regularUser());
         mockMvc.perform(post(signupPath())
                 .contentType(APPLICATION_JSON)
-                .content(json(validRequest())))
+                .content(json(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.jwt").exists());
+                .andExpect(jsonPath("$.jwt").exists())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.username", is(validUsername())))
+                .andExpect(jsonPath("$.email", is(validEmail())));
     }
 
     @Test
@@ -177,23 +182,29 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void okWithJwtWhenUserLogsInWithUsername() throws Exception {
+    void userCanLogInWithUsername() throws Exception {
         signup(new SignupRequest("daniel", validEmail(), validPassword(), admin()));
         mockMvc.perform(post(loginPath())
                .contentType(APPLICATION_JSON)
                .content(json(new LoginRequest("daniel", validPassword()))))
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$.jwt").exists());
+               .andExpect(jsonPath("$.jwt").exists())
+               .andExpect(jsonPath("$.id").exists())
+               .andExpect(jsonPath("$.username", is("daniel")))
+               .andExpect(jsonPath("$.email", is(validEmail())));
     }
 
     @Test
-    void okWithJwtWhenUserLogsInWithEmail() throws Exception {
+    void userCanLogInWithEmail() throws Exception {
         signup(new SignupRequest(validUsername(), "daniel@gmail.com", validPassword(), admin()));
         mockMvc.perform(post(loginPath())
                .contentType(APPLICATION_JSON)
                .content(json(new LoginRequest("daniel@gmail.com", validPassword()))))
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$.jwt").exists());
+               .andExpect(jsonPath("$.jwt").exists())
+               .andExpect(jsonPath("$.id").exists())
+               .andExpect(jsonPath("$.username", is(validUsername())))
+               .andExpect(jsonPath("$.email", is("daniel@gmail.com")));
     }
 
     @Test
@@ -246,7 +257,7 @@ public class UserControllerTest extends AbstractControllerTest {
     @Test
     void forbiddenWithMessageWhenCallingSecuredEndpointWithFakeToken() throws Exception {
         mockMvc.perform(get("/users/hello")
-               .header(AUTHORIZATION, "Bearer ThisTokenIsFake")
+               .header(AUTHORIZATION, headerWith("This token is fake"))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden())
                .andExpect(content().json("{\"error\":\"Cannot access secured endpoint without valid jwt\"}"));
@@ -254,9 +265,9 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void forbiddenWithMessageWhenCallingSecuredEndpointWithAlteredToken() throws Exception {
-        String validToken = token(signup(validRequest()));
+        String validToken = tokenFrom(signup(validRequest()));
         mockMvc.perform(get("/users/hello")
-               .header(AUTHORIZATION, bearerPrefix().formatted(validToken + "A"))
+               .header(AUTHORIZATION, headerWith(validToken + "A"))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden())
                .andExpect(content().json("{\"error\":\"Cannot access secured endpoint without valid jwt\"}"));
@@ -264,9 +275,9 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void okWithResponseBodyWhenCallingSecuredEndpointWithValidJwt() throws Exception {
-        String validToken = token(signup(validRequest()));
+        String validToken = tokenFrom(signup(validRequest()));
         mockMvc.perform(get("/users/hello")
-               .header(AUTHORIZATION, bearerPrefix().formatted(validToken))
+               .header(AUTHORIZATION, headerWith(validToken))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(content().string("Hello"));
@@ -274,18 +285,18 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void adminUsersHaveAccessToAdminResources() throws Exception {
-        String adminToken = token(signup(newUserWithRole(admin())));
+        String adminToken = tokenFrom(signup(newUserWithRole(admin())));
         mockMvc.perform(get("/users")
-               .header(AUTHORIZATION, bearerPrefix().formatted(adminToken))
+               .header(AUTHORIZATION, headerWith(adminToken))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isOk());
     }
 
     @Test
     void regularUsersDoNotHaveAccessToAdminResources() throws Exception {
-        String regularUserToken = token(signup(newUserWithRole(regularUser())));
+        String regularUserToken = tokenFrom(signup(newUserWithRole(regularUser())));
         mockMvc.perform(get("/users")
-               .header(AUTHORIZATION, bearerPrefix().formatted(regularUserToken))
+               .header(AUTHORIZATION, headerWith(regularUserToken))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden());
     }
@@ -293,9 +304,9 @@ public class UserControllerTest extends AbstractControllerTest {
     @Test
     void usersCanDeleteTheirOwnAccount() throws Exception {
         SignupRequest signupRequest = newUserWithRole(regularUser());
-        String token = token(signup(signupRequest));
+        String token = tokenFrom(signup(signupRequest));
         mockMvc.perform(delete("/users/%s".formatted(signupRequest.getUsername()))
-               .header(AUTHORIZATION, bearerPrefix().formatted(token))
+               .header(AUTHORIZATION, headerWith(token))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isNoContent());
     }
@@ -305,10 +316,10 @@ public class UserControllerTest extends AbstractControllerTest {
         var firstUserRequest = new SignupRequest("lewis", "lewis@gmail.com", "Password99##", regularUser());
         var secondUserRequest = new SignupRequest("daniel", "daniel@gmail.com", "Password55!!", regularUser());
         signup(firstUserRequest);
-        String secondUserToken = token(signup(secondUserRequest));
+        String secondUserToken = tokenFrom(signup(secondUserRequest));
 
         mockMvc.perform(delete("/users/%s".formatted(firstUserRequest.getUsername()))
-               .header(AUTHORIZATION, bearerPrefix().formatted(secondUserToken))
+               .header(AUTHORIZATION, headerWith(secondUserToken))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden());
     }

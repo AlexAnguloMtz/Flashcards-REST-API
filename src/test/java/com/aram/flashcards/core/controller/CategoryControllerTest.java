@@ -36,14 +36,14 @@ public class CategoryControllerTest extends AbstractControllerTest {
 
     @Test
     void okWithAllCategories() throws Exception {
-        String token = token(signup(newUserWithRole(regularUser())));
+        String token = saveNewUserAndReturnToken();
         String response = mockMvc.perform(get(categoriesPath())
                 .contentType(APPLICATION_JSON)
-                .header(AUTHORIZATION, bearerPrefix().formatted(token)))
+                .header(AUTHORIZATION, headerWith(token)))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        List<Category> categories = listFromJson(response, Category.class);
+        List<Category> categories = listFromJsonArray(response, Category.class);
 
         assertEquals(11, categories.size());
         assertTrue(hasCategoryWithName(categories, "Programming"));

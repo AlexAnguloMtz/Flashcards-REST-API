@@ -1,6 +1,7 @@
 package com.aram.flashcards.auth.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class SignupRequest {
              message = "{error.auth.invalid.password}")
     private final String password;
 
+    @NotBlank(message = "{error.empty.attribute}")
     private final String role;
 
 }

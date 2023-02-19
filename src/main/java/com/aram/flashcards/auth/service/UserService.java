@@ -11,10 +11,11 @@ public interface UserService {
 
     AuthResponse login(LoginRequest request);
 
-
     AppUser findByUsernameOrEmail(String usernameOrEmail);
 
     Iterable<AppUser> findAll();
 
     void deleteByUsername(String username);
+
+    boolean existsById(String userId);
 }
