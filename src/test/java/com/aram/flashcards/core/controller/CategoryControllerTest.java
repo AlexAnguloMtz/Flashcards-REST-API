@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class CategoryControllerTest extends AbstractControllerTest {
+class CategoryControllerTest extends AbstractControllerTest {
 
     private static final String CATEGORIES_PATH = "/categories";
 
@@ -39,13 +39,13 @@ public class CategoryControllerTest extends AbstractControllerTest {
         String token = saveNewUserAndReturnToken();
         String response = mockMvc.perform(get(categoriesPath())
                 .contentType(APPLICATION_JSON)
-                .header(AUTHORIZATION, headerWith(token)))
+                .header(AUTHORIZATION, headerWithToken(token)))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         List<Category> categories = listFromJsonArray(response, Category.class);
 
-        assertEquals(11, categories.size());
+        assertEquals(12, categories.size());
         assertTrue(hasCategoryWithName(categories, "Programming"));
     }
 

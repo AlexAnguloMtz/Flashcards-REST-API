@@ -19,12 +19,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -33,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class StudySessionControllerTest extends AbstractControllerTest {
+class StudySessionControllerTest extends AbstractControllerTest {
 
     private static final String BASE_PATH = "/study-sessions";
 
@@ -66,7 +63,7 @@ public class StudySessionControllerTest extends AbstractControllerTest {
         var request = new StudySessionCreationRequest(authResponse.getId(), category.getId(), "Guitar chords");
 
         mockMvc.perform(post(basePath())
-                .header(AUTHORIZATION, headerWith(authResponse.getJwt()))
+                .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
                 .contentType(APPLICATION_JSON)
                 .content(json(request)))
                 .andExpect(status().isCreated())
@@ -82,7 +79,7 @@ public class StudySessionControllerTest extends AbstractControllerTest {
         var request = new StudySessionCreationRequest("Fake User Id", category.getId(), "Guitar chords");
 
         mockMvc.perform(post(basePath())
-               .header(AUTHORIZATION, headerWith(authResponse.getJwt()))
+               .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
                .contentType(APPLICATION_JSON)
                .content(json(request)))
                .andExpect(status().isNotFound());
@@ -93,7 +90,7 @@ public class StudySessionControllerTest extends AbstractControllerTest {
         var request = new StudySessionCreationRequest(authResponse.getId(), "Fake Category Name", "Guitar chords");
 
         mockMvc.perform(post(basePath())
-               .header(AUTHORIZATION, headerWith(authResponse.getJwt()))
+               .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
                .contentType(APPLICATION_JSON)
                .content(json(request)))
                .andExpect(status().isNotFound());
@@ -105,7 +102,7 @@ public class StudySessionControllerTest extends AbstractControllerTest {
         StudySessionResponse studySession = saveStudySession(request);
 
         mockMvc.perform(delete(basePath() + "/" + studySession.id())
-               .header(AUTHORIZATION, headerWith(authResponse.getJwt()))
+               .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isNoContent());
     }
@@ -117,7 +114,7 @@ public class StudySessionControllerTest extends AbstractControllerTest {
         StudySessionResponse studySession = saveStudySession(request);
 
         mockMvc.perform(delete(basePath() + "/" + studySession.id())
-               .header(AUTHORIZATION, headerWith(secondUserAuth.getJwt()))
+               .header(AUTHORIZATION, headerWithToken(secondUserAuth.getJwt()))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden())
                .andExpect(content().json("{\"error\":\"%s\"}".formatted(ownershipErrorMessage())));
@@ -127,7 +124,7 @@ public class StudySessionControllerTest extends AbstractControllerTest {
     void cannotCreateStudySessionWithEmptyName() throws Exception {
         var request = new StudySessionCreationRequest(authResponse.getId(), category.getId(), "");
         mockMvc.perform(post(basePath())
-               .header(AUTHORIZATION, headerWith(authResponse.getJwt()))
+               .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
                .contentType(APPLICATION_JSON)
                .content(json(request)))
                .andExpect(status().isUnprocessableEntity())
@@ -139,7 +136,7 @@ public class StudySessionControllerTest extends AbstractControllerTest {
         Stream.of("Guitar chords", "Flute chords").map(this::requestWithName).forEach(this::saveStudySession);
 
         mockMvc.perform(get("%s/filter?userId=%s".formatted(basePath(), authResponse.getId()))
-               .header(AUTHORIZATION, headerWith(authResponse.getJwt()))
+               .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.length()", is(2)));
@@ -150,7 +147,7 @@ public class StudySessionControllerTest extends AbstractControllerTest {
         Stream.of("Guitar chords", "Flute chords").map(this::requestWithName).forEach(this::saveStudySession);
 
         mockMvc.perform(get("%s/filter?userId=%s".formatted(basePath(), authResponse.getId()))
-               .header(AUTHORIZATION, headerWith(authResponse.getJwt()))
+               .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$[0].name", is("Flute chords")))
@@ -158,18 +155,19 @@ public class StudySessionControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void usersCanEditTheirOwnStudySessions() throws Exception {
+    void usersCanEditNameAndCategoryOfTheirOwnStudySessions() throws Exception {
         StudySessionResponse savedStudySession = saveStudySession(requestWithName("Guitar chords"));
-        var request = new StudySessionUpdateRequest(category.getId(), "Flute chords");
+        String newCategoryId = idFromCategoryWithName("Sports");
+        var request = new StudySessionUpdateRequest(newCategoryId, "Water sports");
 
-        var expectedResponse = new StudySession(savedStudySession.id(), "Flute chords", authResponse.getId(), category.getId());
+        var expectedResponse = new StudySession(savedStudySession.id(), "Water sports", authResponse.getId(), newCategoryId);
 
         mockMvc.perform(put(basePath() + "/" + savedStudySession.id())
-               .header(AUTHORIZATION, headerWith(authResponse.getJwt()))
-               .contentType(APPLICATION_JSON)
-               .content(json(request)))
-               .andExpect(status().is2xxSuccessful())
-               .andExpect(content().json(json(expectedResponse)));
+                .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
+                .contentType(APPLICATION_JSON)
+                .content(json(request)))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().json(json(expectedResponse)));
     }
 
     @Test
@@ -180,7 +178,7 @@ public class StudySessionControllerTest extends AbstractControllerTest {
         var request = new StudySessionUpdateRequest(category.getId(), "Flute chords");
 
         mockMvc.perform(put(basePath() + "/" + savedStudySession.id())
-               .header(AUTHORIZATION, headerWith(secondUser.getJwt()))
+               .header(AUTHORIZATION, headerWithToken(secondUser.getJwt()))
                .contentType(APPLICATION_JSON)
                .content(json(request)))
                .andExpect(status().isForbidden())
@@ -193,7 +191,7 @@ public class StudySessionControllerTest extends AbstractControllerTest {
         var request = new StudySessionUpdateRequest("Fake Category Id", savedStudySession.name());
 
         mockMvc.perform(put(basePath() + "/" + savedStudySession.id())
-               .header(AUTHORIZATION, headerWith(authResponse.getJwt()))
+               .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
                .contentType(APPLICATION_JSON)
                .content(json(request)))
                .andExpect(status().isNotFound())
@@ -202,10 +200,6 @@ public class StudySessionControllerTest extends AbstractControllerTest {
 
     private StudySessionCreationRequest requestWithName(String studySessionName) {
         return new StudySessionCreationRequest(authResponse.getId(), category.getId(), studySessionName);
-    }
-
-    private boolean hasStudySessionWithName(List<StudySession> studySessions, String name) {
-        return studySessions.stream().anyMatch(studySession -> studySession.hasName(name));
     }
 
     private Category findCategoryByName(String name) {
@@ -224,4 +218,7 @@ public class StudySessionControllerTest extends AbstractControllerTest {
         return "This study session does not belong to the authenticated user";
     }
 
+    private String idFromCategoryWithName(String categoryName) {
+        return findCategoryByName(categoryName).getId();
+    }
 }

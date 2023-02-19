@@ -33,7 +33,8 @@ public class CategoriesLoader implements CommandLineRunner {
                 "Math",
                 "Medicine",
                 "Music",
-                "Programming"
+                "Programming",
+                "Sports"
         );
     }
 

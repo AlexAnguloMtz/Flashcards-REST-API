@@ -10,6 +10,7 @@ import com.aram.flashcards.core.dto.StudySessionCreationRequest;
 import com.aram.flashcards.core.dto.StudySessionResponse;
 import com.aram.flashcards.core.dto.StudySessionUpdateRequest;
 import com.aram.flashcards.core.model.StudySession;
+import com.aram.flashcards.core.repository.FlashcardRepository;
 import com.aram.flashcards.core.repository.StudySessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ class StudySessionServiceImpl extends AbstractService implements StudySessionSer
     @Autowired
     private IdGenerator idGenerator;
     @Autowired
-    private FlashcardService flashcardService;
+    private FlashcardRepository flashcardRepository;
 
     @Override
     @Transactional
@@ -63,6 +64,11 @@ class StudySessionServiceImpl extends AbstractService implements StudySessionSer
         checkOwnership(findById(id));
         checkCategoryExistsById(request.categoryId());
         return responseFrom(saveAndReturn(studySessionFrom(id, request)));
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        return studySessionRepository.existsById(id);
     }
 
     private void checkOwnership(StudySession studySession) {
@@ -133,7 +139,7 @@ class StudySessionServiceImpl extends AbstractService implements StudySessionSer
     }
 
     private Iterable<FlashcardResponse> findFlashcardsByStudySessionId(String id) {
-        return flashcardService.findAllByStudySessionId(id);
+        return flashcardRepository.findAllByStudySessionId(id);
     }
 
     private StudySession saveAndReturn(StudySession studySession) {

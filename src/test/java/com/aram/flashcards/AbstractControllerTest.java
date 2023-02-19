@@ -1,14 +1,11 @@
 package com.aram.flashcards;
 
 import com.aram.flashcards.auth.dto.AuthResponse;
-import com.aram.flashcards.auth.dto.LoginRequest;
 import com.aram.flashcards.auth.dto.SignupRequest;
-import com.aram.flashcards.auth.model.AppUser;
 import com.aram.flashcards.auth.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 
 import java.util.List;
 
@@ -84,7 +81,7 @@ public abstract class AbstractControllerTest {
         }
     }
 
-    protected String headerWith(String token) {
+    protected String headerWithToken(String token) {
         return "Bearer %s".formatted(token);
     }
 

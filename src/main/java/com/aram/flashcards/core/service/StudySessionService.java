@@ -15,4 +15,6 @@ public interface StudySessionService {
     Iterable<StudySessionResponse> filter(Map<String, String> parameters);
 
     StudySessionResponse update(String id, StudySessionUpdateRequest request);
+
+    boolean existsById(String id);
 }

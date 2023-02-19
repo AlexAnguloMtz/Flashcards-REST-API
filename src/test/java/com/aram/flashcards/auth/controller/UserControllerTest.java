@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class UserControllerTest extends AbstractControllerTest {
+class UserControllerTest extends AbstractControllerTest {
 
     private static final String SIGNUP_PATH = "/users/signup";
     private static final String LOGIN_PATH = "/users/login";
@@ -257,7 +257,7 @@ public class UserControllerTest extends AbstractControllerTest {
     @Test
     void forbiddenWithMessageWhenCallingSecuredEndpointWithFakeToken() throws Exception {
         mockMvc.perform(get("/users/hello")
-               .header(AUTHORIZATION, headerWith("This token is fake"))
+               .header(AUTHORIZATION, headerWithToken("This token is fake"))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden())
                .andExpect(content().json("{\"error\":\"Cannot access secured endpoint without valid jwt\"}"));
@@ -267,7 +267,7 @@ public class UserControllerTest extends AbstractControllerTest {
     void forbiddenWithMessageWhenCallingSecuredEndpointWithAlteredToken() throws Exception {
         String validToken = tokenFrom(signup(validRequest()));
         mockMvc.perform(get("/users/hello")
-               .header(AUTHORIZATION, headerWith(validToken + "A"))
+               .header(AUTHORIZATION, headerWithToken(validToken + "A"))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden())
                .andExpect(content().json("{\"error\":\"Cannot access secured endpoint without valid jwt\"}"));
@@ -277,7 +277,7 @@ public class UserControllerTest extends AbstractControllerTest {
     void okWithResponseBodyWhenCallingSecuredEndpointWithValidJwt() throws Exception {
         String validToken = tokenFrom(signup(validRequest()));
         mockMvc.perform(get("/users/hello")
-               .header(AUTHORIZATION, headerWith(validToken))
+               .header(AUTHORIZATION, headerWithToken(validToken))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(content().string("Hello"));
@@ -287,7 +287,7 @@ public class UserControllerTest extends AbstractControllerTest {
     void adminUsersHaveAccessToAdminResources() throws Exception {
         String adminToken = tokenFrom(signup(newUserWithRole(admin())));
         mockMvc.perform(get("/users")
-               .header(AUTHORIZATION, headerWith(adminToken))
+               .header(AUTHORIZATION, headerWithToken(adminToken))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isOk());
     }
@@ -296,7 +296,7 @@ public class UserControllerTest extends AbstractControllerTest {
     void regularUsersDoNotHaveAccessToAdminResources() throws Exception {
         String regularUserToken = tokenFrom(signup(newUserWithRole(regularUser())));
         mockMvc.perform(get("/users")
-               .header(AUTHORIZATION, headerWith(regularUserToken))
+               .header(AUTHORIZATION, headerWithToken(regularUserToken))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden());
     }
@@ -306,7 +306,7 @@ public class UserControllerTest extends AbstractControllerTest {
         SignupRequest signupRequest = newUserWithRole(regularUser());
         String token = tokenFrom(signup(signupRequest));
         mockMvc.perform(delete("/users/%s".formatted(signupRequest.getUsername()))
-               .header(AUTHORIZATION, headerWith(token))
+               .header(AUTHORIZATION, headerWithToken(token))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isNoContent());
     }
@@ -319,7 +319,7 @@ public class UserControllerTest extends AbstractControllerTest {
         String secondUserToken = tokenFrom(signup(secondUserRequest));
 
         mockMvc.perform(delete("/users/%s".formatted(firstUserRequest.getUsername()))
-               .header(AUTHORIZATION, headerWith(secondUserToken))
+               .header(AUTHORIZATION, headerWithToken(secondUserToken))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden());
     }
