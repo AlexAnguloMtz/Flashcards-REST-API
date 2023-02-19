@@ -1,0 +1,60 @@
+package com.aram.flashcards.core.controller;
+
+import com.aram.flashcards.AbstractControllerTest;
+import com.aram.flashcards.auth.service.UserService;
+import com.aram.flashcards.core.model.Category;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class CategoryControllerTest extends AbstractControllerTest {
+
+    private static final String CATEGORIES_PATH = "/categories";
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    public CategoryControllerTest(UserService userService) {
+        super(userService);
+    }
+
+    @Test
+    void okWithAllCategories() throws Exception {
+        String token = token(signup(newUserWithRole(regularUser())));
+        String response = mockMvc.perform(get(categoriesPath())
+                .contentType(APPLICATION_JSON)
+                .header(AUTHORIZATION, bearerPrefix().formatted(token)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        List<Category> categories = listFromJson(response, Category.class);
+
+        assertEquals(11, categories.size());
+        assertTrue(hasCategoryWithName(categories, "Programming"));
+    }
+
+    private boolean hasCategoryWithName(List<Category> categories, String categoryName) {
+        return categories.stream().anyMatch(category -> category.hasName(categoryName));
+    }
+
+    private String categoriesPath() {
+        return CATEGORIES_PATH;
+    }
+
+}

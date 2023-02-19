@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:${database.provider}://${database.host}/${database.schema}
-    username: ${database.username}
-    password: ${database.password}
+    url: jdbc:mysql://localhost/flashcards
+    username: root
+    password: 27111995
 
   sql:
     init:
@@ -18,4 +18,4 @@ logging:
         security: DEBUG
 
 jwt:
-  secret: ${jwt.secret}
+  secret: fdAFEAEFafSDFK32940JDSF234F22Rf2Ff2FakoEOKenR342nOSF90564KFD2093

@@ -8,11 +8,11 @@
 		<version>3.0.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.aram.auth</groupId>
-	<artifactId>Auth Module</artifactId>
+	<groupId>com.aram.flashcards</groupId>
+	<artifactId>Flashcards</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Auth Module</name>
-	<description>Reusable JWT Auth Module</description>
+	<name>Flashcards</name>
+	<description>Flashcards</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
