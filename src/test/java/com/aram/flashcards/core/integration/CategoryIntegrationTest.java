@@ -1,6 +1,6 @@
-package com.aram.flashcards.core.controller;
+package com.aram.flashcards.core.integration;
 
-import com.aram.flashcards.AbstractControllerTest;
+import com.aram.flashcards.AbstractIntegrationTest;
 import com.aram.flashcards.auth.service.UserService;
 import com.aram.flashcards.core.model.Category;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class CategoryControllerTest extends AbstractControllerTest {
+class CategoryIntegrationTest extends AbstractIntegrationTest {
 
     private static final String CATEGORIES_PATH = "/categories";
 
@@ -30,7 +30,7 @@ class CategoryControllerTest extends AbstractControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    public CategoryControllerTest(UserService userService) {
+    public CategoryIntegrationTest(UserService userService) {
         super(userService);
     }
 

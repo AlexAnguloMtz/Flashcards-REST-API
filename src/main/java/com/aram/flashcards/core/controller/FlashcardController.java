@@ -20,7 +20,7 @@ public class FlashcardController {
     private FlashcardService flashcardService;
 
     @PostMapping
-    public ResponseEntity<FlashcardResponse> save(@RequestBody FlashcardCreationRequest request) {
+    public ResponseEntity<FlashcardResponse> save(@RequestBody @Valid FlashcardCreationRequest request) {
         return new ResponseEntity<>(flashcardService.save(request), CREATED);
     }
 

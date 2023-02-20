@@ -3,11 +3,13 @@ package com.aram.flashcards.common.data;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+@Component
 public class JsonLoader {
 
     public <T> List<T> readJson(String path, TypeReference<List<T>> typeReference) {

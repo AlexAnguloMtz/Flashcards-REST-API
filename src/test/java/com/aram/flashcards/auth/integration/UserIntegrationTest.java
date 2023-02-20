@@ -1,9 +1,9 @@
-package com.aram.flashcards.auth.controller;
+package com.aram.flashcards.auth.integration;
 
 import com.aram.flashcards.auth.dto.LoginRequest;
 import com.aram.flashcards.auth.dto.SignupRequest;
 import com.aram.flashcards.auth.service.UserService;
-import com.aram.flashcards.AbstractControllerTest;
+import com.aram.flashcards.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class UserControllerTest extends AbstractControllerTest {
+class UserIntegrationTest extends AbstractIntegrationTest {
 
     private static final String SIGNUP_PATH = "/users/signup";
     private static final String LOGIN_PATH = "/users/login";
@@ -29,7 +29,7 @@ class UserControllerTest extends AbstractControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    public UserControllerTest(UserService userService) {
+    public UserIntegrationTest(UserService userService) {
         super(userService);
     }
 

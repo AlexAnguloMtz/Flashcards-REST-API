@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost/flashcards
-    username: root
-    password: 27111995
+    url: jdbc:mysql://${db.host}/${db.schema}
+    username: ${db.user}
+    password: ${db.password}
 
   sql:
     init:
@@ -18,7 +18,7 @@ logging:
         security: DEBUG
 
 jwt:
-  secret: fdAFEAEFafSDFK32940JDSF234F22Rf2Ff2FakoEOKenR342nOSF90564KFD2093
+  secret: ${jwt.secret}
 
 json:
   roles: /json/roles.json

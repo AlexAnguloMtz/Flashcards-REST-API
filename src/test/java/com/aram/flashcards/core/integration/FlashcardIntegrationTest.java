@@ -1,6 +1,6 @@
-package com.aram.flashcards.core.controller;
+package com.aram.flashcards.core.integration;
 
-import com.aram.flashcards.AbstractControllerTest;
+import com.aram.flashcards.AbstractIntegrationTest;
 import com.aram.flashcards.auth.dto.AuthResponse;
 import com.aram.flashcards.auth.dto.SignupRequest;
 import com.aram.flashcards.auth.service.UserService;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class FlashcardControllerTest extends AbstractControllerTest {
+class FlashcardIntegrationTest extends AbstractIntegrationTest {
 
     private static final String BASE_PATH = "/flashcards";
 
@@ -50,7 +50,7 @@ class FlashcardControllerTest extends AbstractControllerTest {
     private AuthResponse authResponse;
 
     @Autowired
-    public FlashcardControllerTest(UserService userService) {
+    public FlashcardIntegrationTest(UserService userService) {
         super(userService);
     }
 
@@ -73,6 +73,30 @@ class FlashcardControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.question", is("Instrument with 6 strings?")))
                 .andExpect(jsonPath("$.answer", is("Guitar")))
                 .andExpect(jsonPath("$.studySessionId", is(studySessionId)));
+    }
+
+    @Test
+    void userCannotCreateFlashcardWithEmptyQuestion() throws Exception {
+        String studySessionId = saveStudySessionAndReturnId(authResponse.getId(), "Instruments");
+        var request = new FlashcardCreationRequest("", "Guitar", studySessionId);
+        mockMvc.perform(post(basePath())
+               .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
+               .contentType(APPLICATION_JSON)
+               .content(json(request)))
+               .andExpect(status().isUnprocessableEntity())
+               .andExpect(content().json("{\"error\":\"Request cannot contain empty attributes\"}"));
+    }
+
+    @Test
+    void userCannotCreateFlashcardWithEmptyAnswer() throws Exception {
+        String studySessionId = saveStudySessionAndReturnId(authResponse.getId(), "Instruments");
+        var request = new FlashcardCreationRequest("Instrument with 6 strings?", "", studySessionId);
+        mockMvc.perform(post(basePath())
+               .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
+               .contentType(APPLICATION_JSON)
+               .content(json(request)))
+               .andExpect(status().isUnprocessableEntity())
+               .andExpect(content().json("{\"error\":\"Request cannot contain empty attributes\"}"));
     }
 
     @Test

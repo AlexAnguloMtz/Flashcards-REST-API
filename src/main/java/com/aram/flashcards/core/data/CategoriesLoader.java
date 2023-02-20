@@ -21,13 +21,16 @@ public class CategoriesLoader implements CommandLineRunner {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private JsonLoader loader;
+
     @Override
     public void run(String... args) throws IOException {
         categoriesFrom(path).forEach(categoryService::save);
     }
 
     private List<CategoryCreationRequest> categoriesFrom(String path) {
-        return new JsonLoader().readJson(path, new TypeReference<>() {});
+        return loader.readJson(path, new TypeReference<>() {});
     }
 
 }

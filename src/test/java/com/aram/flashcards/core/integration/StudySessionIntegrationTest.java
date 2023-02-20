@@ -1,6 +1,6 @@
-package com.aram.flashcards.core.controller;
+package com.aram.flashcards.core.integration;
 
-import com.aram.flashcards.AbstractControllerTest;
+import com.aram.flashcards.AbstractIntegrationTest;
 import com.aram.flashcards.auth.dto.AuthResponse;
 import com.aram.flashcards.auth.dto.SignupRequest;
 import com.aram.flashcards.auth.service.UserService;
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class StudySessionControllerTest extends AbstractControllerTest {
+class StudySessionIntegrationTest extends AbstractIntegrationTest {
 
     private static final String BASE_PATH = "/study-sessions";
 
@@ -48,7 +48,7 @@ class StudySessionControllerTest extends AbstractControllerTest {
     private AuthResponse authResponse;
 
     @Autowired
-    public StudySessionControllerTest(UserService userService) {
+    public StudySessionIntegrationTest(UserService userService) {
         super(userService);
     }
 

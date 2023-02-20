@@ -20,13 +20,15 @@ public class RolesLoader implements CommandLineRunner {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private JsonLoader loader;
+
     @Override
     public void run(String... args) throws Exception {
         roles(path).forEach(roleRepository::save);
     }
-
     private List<AppRole> roles(String path) {
-        return new JsonLoader().readJson(path, new TypeReference<>(){});
+        return loader.readJson(path, new TypeReference<>(){});
     }
 
 }

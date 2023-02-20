@@ -9,12 +9,12 @@ import com.fasterxml.jackson.databind.ObjectReader;
 
 import java.util.List;
 
-public abstract class AbstractControllerTest {
+public abstract class AbstractIntegrationTest {
 
     private final ObjectMapper serializer;
     private final UserService userService;
 
-    public AbstractControllerTest(UserService userService) {
+    public AbstractIntegrationTest(UserService userService) {
         this.userService = userService;
         serializer = new ObjectMapper();
     }

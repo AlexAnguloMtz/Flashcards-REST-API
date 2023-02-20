@@ -95,6 +95,10 @@ class FlashcardServiceImpl extends AbstractService implements FlashcardService {
                 .orElseThrow(() -> new NotFoundException("Cannot find flashcard with id = %s".formatted(id)));
     }
 
+    private Flashcard saveAndReturn(Flashcard flashcard) {
+        return flashcardRepository.save(flashcard);
+    }
+
     private FlashcardResponse responseFrom(Flashcard flashcard) {
         return new FlashcardResponse(
                 flashcard.getId(),
@@ -102,10 +106,6 @@ class FlashcardServiceImpl extends AbstractService implements FlashcardService {
                 flashcard.getAnswer(),
                 flashcard.getStudySessionId()
         );
-    }
-
-    private Flashcard saveAndReturn(Flashcard flashcard) {
-        return flashcardRepository.save(flashcard);
     }
 
     private Flashcard flashcardFrom(FlashcardCreationRequest request) {
