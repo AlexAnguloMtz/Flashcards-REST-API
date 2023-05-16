@@ -61,7 +61,7 @@ class FlashcardIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void userCanCreateNewFlashcard() throws Exception {
+    void can_create_a_new_flashcard() throws Exception {
         String studySessionId = saveStudySessionAndReturnId(authResponse.getId(), "Instruments");
         var request = new FlashcardCreationRequest("Instrument with 6 strings?", "Guitar", studySessionId);
         mockMvc.perform(post(basePath())
@@ -76,7 +76,7 @@ class FlashcardIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void userCannotCreateFlashcardWithEmptyQuestion() throws Exception {
+    void cannot_create_flashcard_with_empty_question() throws Exception {
         String studySessionId = saveStudySessionAndReturnId(authResponse.getId(), "Instruments");
         var request = new FlashcardCreationRequest("", "Guitar", studySessionId);
         mockMvc.perform(post(basePath())
@@ -88,7 +88,7 @@ class FlashcardIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void userCannotCreateFlashcardWithEmptyAnswer() throws Exception {
+    void cannot_create_flashcard_with_empty_answer() throws Exception {
         String studySessionId = saveStudySessionAndReturnId(authResponse.getId(), "Instruments");
         var request = new FlashcardCreationRequest("Instrument with 6 strings?", "", studySessionId);
         mockMvc.perform(post(basePath())
@@ -100,7 +100,7 @@ class FlashcardIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCannotCreateFlashcardsForStudySessionThatDoesNotBelongsToThem() throws Exception {
+    void users_cannot_create_flashcards_for_a_study_session_that_does_not_belong_to_them() throws Exception {
         AuthResponse secondUserAuth = signup(new SignupRequest("second_user", "second@gmail.com", "Password99##", regularUser()));
         String studySessionId = saveStudySessionAndReturnId(authResponse.getId(), "Instruments");
         var request = new FlashcardCreationRequest("Instrument with 6 strings?", "Guitar", studySessionId);
@@ -114,7 +114,7 @@ class FlashcardIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCanEditTheirFlashcards() throws Exception {
+    void users_can_edit_their_flashcards() throws Exception {
         String firstStudySessionId = saveStudySessionAndReturnId(authResponse.getId(), "Instruments");
         String secondStudySessionId = saveStudySessionAndReturnId(authResponse.getId(), "Musical tones");
         save(new Flashcard("100", "Instrument with 6 strings?", "Guitar", firstStudySessionId));
@@ -132,7 +132,7 @@ class FlashcardIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCannotEditFlashcardsWithStudySessionThatDoesNotBelongToThem() throws Exception {
+    void users_cannot_edit_flashcards_of_a_study_session_that_does_not_belong_to_them() throws Exception {
         AuthResponse secondUserAuth = signup(new SignupRequest("second_user", "second@gmail.com", "Password99##", regularUser()));
         String firstStudySessionId = saveStudySessionAndReturnId(authResponse.getId(), "Instruments");
         String secondStudySessionId = saveStudySessionAndReturnId(secondUserAuth.getId(), "Musical tones");
@@ -148,7 +148,7 @@ class FlashcardIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCannotEditFlashcardsThatDoNotBelongToThem() throws Exception {
+    void users_cannot_edit_flashcards_that_do_not_belong_to_them() throws Exception {
         AuthResponse secondUserAuth = signup(new SignupRequest("second_user", "second@gmail.com", "Password99##", regularUser()));
         String studySessionId = saveStudySessionAndReturnId(authResponse.getId(), "Instruments");
         save(new Flashcard("100", "Instrument with 6 strings?", "Guitar", studySessionId));
@@ -163,7 +163,7 @@ class FlashcardIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCanDeleteTheirFlashcards() throws Exception {
+    void users_can_delete_their_flashcards() throws Exception {
         String studySessionId = saveStudySessionAndReturnId(authResponse.getId(), "Instruments");
         save(new Flashcard("100", "Instrument with 6 strings?", "Guitar", studySessionId));
         mockMvc.perform(delete(basePath() + "/" + "100")
@@ -173,7 +173,7 @@ class FlashcardIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCannotDeleteFlashcardsFromOtherUsers() throws Exception {
+    void users_cannot_delete_flashcards_that_belong_to_someone_else() throws Exception {
         AuthResponse secondUserAuth = signup(new SignupRequest("second_user", "second@gmail.com", "Password99##", regularUser()));
         String studySessionId = saveStudySessionAndReturnId(authResponse.getId(), "Instruments");
         save(new Flashcard("100", "Instrument with 6 strings?", "Guitar", studySessionId));
