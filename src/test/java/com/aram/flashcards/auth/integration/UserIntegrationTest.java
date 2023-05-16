@@ -34,7 +34,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void userCanSignUpWithValidCredentials() throws Exception {
+    void user_can_register_with_valid_credentials() throws Exception {
         var request = new SignupRequest(validUsername(), validEmail(), validPassword(), regularUser());
         mockMvc.perform(post(signupPath())
                 .contentType(APPLICATION_JSON)
@@ -47,7 +47,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void unprocessableEntityAndMessageWhenUsernameIsTooShort() throws Exception {
+    void username_must_have_a_minimum_length() throws Exception {
         var request = new SignupRequest("min", validEmail(), validPassword(), admin());
         mockMvc.perform(post(signupPath())
                 .contentType(APPLICATION_JSON)
@@ -58,7 +58,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void unprocessableEntityAndMessageWhenUsernameIsTooLong() throws Exception {
+    void username_cannot_be_longer_than_maximum_length() throws Exception {
         var request = new SignupRequest("this_username_is_huge", validEmail(), validPassword(), admin());
         mockMvc.perform(post(signupPath())
                 .contentType(APPLICATION_JSON)
@@ -69,7 +69,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void unprocessableEntityAndMessageWhenUsernameContainsInvalidSymbols() throws Exception {
+    void username_cannot_contain_invalid_characters() throws Exception {
         var request = new SignupRequest("username_!#$%&/", validEmail(), validPassword(), admin());
         mockMvc.perform(post(signupPath())
                .contentType(APPLICATION_JSON)
@@ -80,7 +80,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void unprocessableEntityAndMessageWhenEmailIsInvalid() throws Exception {
+    void email_must_be_a_valid_email() throws Exception {
         var request = new SignupRequest(validUsername(), "invalid_gmail.com", validPassword(), admin());
         mockMvc.perform(post(signupPath())
                 .contentType(APPLICATION_JSON)
@@ -90,7 +90,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void unprocessableEntityAndMessageWhenPasswordIsTooShort() throws Exception {
+    void password_must_have_a_minimum_length() throws Exception {
         var request = new SignupRequest(validUsername(), validEmail(), "Short9#", admin());
         mockMvc.perform(post(signupPath())
                 .contentType(APPLICATION_JSON)
@@ -101,7 +101,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void unprocessableEntityAndMessageWhenPasswordDoesNotHaveDigits() throws Exception {
+    void password_must_contain_at_least_one_digit() throws Exception {
         var request = new SignupRequest(validUsername(), validEmail(), "NoDigitsHere##", admin());
         mockMvc.perform(post(signupPath())
                 .contentType(APPLICATION_JSON)
@@ -112,7 +112,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void unprocessableEntityAndMessageWhenPasswordDoesNotHaveUppercase() throws Exception {
+    void password_must_contain_at_least_one_uppercase() throws Exception {
         var request = new SignupRequest(validUsername(), validEmail(), "nouppercase99##", admin());
         mockMvc.perform(post(signupPath())
                 .contentType(APPLICATION_JSON)
@@ -123,7 +123,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void unprocessableEntityAndMessageWhenPasswordDoesNotHaveLowercase() throws Exception {
+    void password_must_contain_at_least_one_lowercase() throws Exception {
         var request = new SignupRequest(validUsername(), validEmail(), "NOLOWERCASE99##", admin());
         mockMvc.perform(post(signupPath())
                 .contentType(APPLICATION_JSON)
@@ -134,7 +134,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void unprocessableEntityAndMessageWhenPasswordDoesNotHaveSymbols() throws Exception {
+    void password_must_contain_at_least_one_special_symbol() throws Exception {
         var request = new SignupRequest(validUsername(), validEmail(), "NoSymbols9999", admin());
         mockMvc.perform(post(signupPath())
                 .contentType(APPLICATION_JSON)
@@ -145,13 +145,14 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void conflictWhenUsernameAlreadyExists() throws Exception {
+    void user_cannot_register_when_username_is_taken() throws Exception {
         signup(new SignupRequest(
                 validRequest().getUsername(),
                 "email@gmail.com",
                 "Password99##",
                 admin()
         ));
+
         mockMvc.perform(post(signupPath())
                 .contentType(APPLICATION_JSON)
                 .content(json(validRequest())))
@@ -159,13 +160,14 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void conflictWhenEmailAlreadyExists() throws Exception {
+    void user_cannot_register_when_email_is_taken() throws Exception {
         signup(new SignupRequest(
                 "jordan",
                 validRequest().getEmail(),
                 "Password99##",
                 admin()
         ));
+
         mockMvc.perform(post(signupPath())
                 .contentType(APPLICATION_JSON)
                 .content(json(validRequest())))
@@ -173,7 +175,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void notFoundWhenRoleDoesNotExist() throws Exception {
+    void user_cannot_register_when_role_does_not_exist() throws Exception {
         var request = new SignupRequest(validUsername(), validEmail(), validPassword(), "INVALID_ROLE");
         mockMvc.perform(post(signupPath())
                .contentType(APPLICATION_JSON)
@@ -182,7 +184,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void userCanLogInWithUsername() throws Exception {
+    void user_can_login_with_username_and_password() throws Exception {
         signup(new SignupRequest("daniel", validEmail(), validPassword(), admin()));
         mockMvc.perform(post(loginPath())
                .contentType(APPLICATION_JSON)
@@ -195,7 +197,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void userCanLogInWithEmail() throws Exception {
+    void user_can_login_with_email_and_password() throws Exception {
         signup(new SignupRequest(validUsername(), "daniel@gmail.com", validPassword(), admin()));
         mockMvc.perform(post(loginPath())
                .contentType(APPLICATION_JSON)
@@ -208,7 +210,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void unauthorizedAndMessageWhenUserLogsInWithNonExistentUsername() throws Exception {
+    void user_cannot_login_when_username_does_not_exist() throws Exception {
         signup(new SignupRequest(validUsername(), validEmail(), validPassword(), admin()));
         mockMvc.perform(post(loginPath())
                .contentType(APPLICATION_JSON)
@@ -218,7 +220,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void unauthorizedAndMessageWhenUserLogsInWithNonExistentEmail() throws Exception {
+    void user_cannot_login_when_email_does_not_exist() throws Exception {
         signup(new SignupRequest(validUsername(), validEmail(), validPassword(), admin()));
         mockMvc.perform(post(loginPath())
                .contentType(APPLICATION_JSON)
@@ -228,7 +230,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void unauthorizedAndMessageWhenUserLogsInWithIncorrectPassword() throws Exception {
+    void user_cannot_login_with_wrong_password() throws Exception {
         signup(new SignupRequest(validUsername(), validEmail(), validPassword(), admin()));
         mockMvc.perform(post(loginPath())
                .contentType(APPLICATION_JSON)
@@ -238,7 +240,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void forbiddenWithMessageWhenCallingSecuredEndpointWithoutAuthorizationHeader() throws Exception {
+    void cannot_access_secured_endpoint_without_a_valid_authorization_header() throws Exception {
         mockMvc.perform(get("/users/hello")
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden())
@@ -246,7 +248,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void forbiddenWithMessageWhenCallingSecuredEndpointWithEmptyToken() throws Exception {
+    void cannot_access_secured_endpoint_with_an_empty_json_web_token() throws Exception {
         mockMvc.perform(get("/users/hello")
                .header(AUTHORIZATION, "Bearer ")
                .contentType(APPLICATION_JSON))
@@ -255,7 +257,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void forbiddenWithMessageWhenCallingSecuredEndpointWithFakeToken() throws Exception {
+    void cannot_access_secured_endpoint_with_an_invalid_json_web_token() throws Exception {
         mockMvc.perform(get("/users/hello")
                .header(AUTHORIZATION, headerWithToken("This token is fake"))
                .contentType(APPLICATION_JSON))
@@ -264,7 +266,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void forbiddenWithMessageWhenCallingSecuredEndpointWithAlteredToken() throws Exception {
+    void cannot_access_secured_endpoint_with_a_modified_json_web_token() throws Exception {
         String validToken = tokenFrom(signup(validRequest()));
         mockMvc.perform(get("/users/hello")
                .header(AUTHORIZATION, headerWithToken(validToken + "A"))
@@ -274,7 +276,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void okWithResponseBodyWhenCallingSecuredEndpointWithValidJwt() throws Exception {
+    void can_access_secured_endpoint_with_a_valid_json_web_token() throws Exception {
         String validToken = tokenFrom(signup(validRequest()));
         mockMvc.perform(get("/users/hello")
                .header(AUTHORIZATION, headerWithToken(validToken))
@@ -284,7 +286,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void adminUsersHaveAccessToAdminResources() throws Exception {
+    void admin_users_have_access_to_admin_resources() throws Exception {
         String adminToken = tokenFrom(signup(newUserWithRole(admin())));
         mockMvc.perform(get("/users")
                .header(AUTHORIZATION, headerWithToken(adminToken))
@@ -293,7 +295,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void regularUsersDoNotHaveAccessToAdminResources() throws Exception {
+    void regular_users_do_not_have_access_to_admin_resources() throws Exception {
         String regularUserToken = tokenFrom(signup(newUserWithRole(regularUser())));
         mockMvc.perform(get("/users")
                .header(AUTHORIZATION, headerWithToken(regularUserToken))
@@ -302,7 +304,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCanDeleteTheirOwnAccount() throws Exception {
+    void users_can_delete_their_own_account() throws Exception {
         SignupRequest signupRequest = newUserWithRole(regularUser());
         String token = tokenFrom(signup(signupRequest));
         mockMvc.perform(delete("/users/%s".formatted(signupRequest.getUsername()))
@@ -312,7 +314,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCannotDeleteAccountThatDoesNotBelongToThem() throws Exception {
+    void users_cannot_delete_an_account_that_does_not_belong_to_them() throws Exception {
         var firstUserRequest = new SignupRequest("lewis", "lewis@gmail.com", "Password99##", regularUser());
         var secondUserRequest = new SignupRequest("daniel", "daniel@gmail.com", "Password55!!", regularUser());
         signup(firstUserRequest);
