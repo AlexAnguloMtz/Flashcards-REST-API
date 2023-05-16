@@ -35,7 +35,7 @@ class CategoryIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void okWithAllCategories() throws Exception {
+    void user_can_get_all_categories() throws Exception {
         String token = saveNewUserAndReturnToken();
         String response = mockMvc.perform(get(categoriesPath())
                 .contentType(APPLICATION_JSON)
