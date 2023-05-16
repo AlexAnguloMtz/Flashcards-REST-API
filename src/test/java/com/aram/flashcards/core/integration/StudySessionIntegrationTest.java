@@ -59,7 +59,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void userCanCreateNewStudySession() throws Exception {
+    void can_create_a_new_study_session() throws Exception {
         var request = new StudySessionCreationRequest(authResponse.getId(), category.getId(), "Guitar chords");
 
         mockMvc.perform(post(basePath())
@@ -75,7 +75,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void cannotCreateStudySessionForNonExistentUser() throws Exception {
+    void cannot_create_a_study_session_for_a_user_that_does_not_exist() throws Exception {
         var request = new StudySessionCreationRequest("Fake User Id", category.getId(), "Guitar chords");
 
         mockMvc.perform(post(basePath())
@@ -86,7 +86,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void cannotCreateStudySessionForNonExistentCategory() throws Exception {
+    void cannot_create_a_study_session_for_a_category_that_does_not_exist() throws Exception {
         var request = new StudySessionCreationRequest(authResponse.getId(), "Fake Category Name", "Guitar chords");
 
         mockMvc.perform(post(basePath())
@@ -97,7 +97,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCanDeleteTheirOwnStudySessions() throws Exception {
+    void users_can_delete_their_own_study_sessions() throws Exception {
         var request = new StudySessionCreationRequest(authResponse.getId(), category.getId(), "Guitar chords");
         StudySessionResponse studySession = saveStudySession(request);
 
@@ -108,7 +108,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCannotDeleteStudySessionsFromOtherUsers() throws Exception {
+    void users_cannot_delete_study_sessions_that_belong_to_someone_else() throws Exception {
         AuthResponse secondUserAuth = signup(new SignupRequest("second_user", "second@gmail.com", "Password99##", regularUser()));
         var request = new StudySessionCreationRequest(authResponse.getId(), category.getId(), "Guitar chords");
         StudySessionResponse studySession = saveStudySession(request);
@@ -121,7 +121,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void cannotCreateStudySessionWithEmptyName() throws Exception {
+    void cannot_create_study_session_with_empty_name() throws Exception {
         var request = new StudySessionCreationRequest(authResponse.getId(), category.getId(), "");
         mockMvc.perform(post(basePath())
                .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
@@ -132,7 +132,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCanFindAllTheirStudySessions() throws Exception {
+    void users_can_get_all_their_study_sessions() throws Exception {
         Stream.of("Guitar chords", "Flute chords").map(this::requestWithName).forEach(this::saveStudySession);
 
         mockMvc.perform(get("%s/filter?userId=%s".formatted(basePath(), authResponse.getId()))
@@ -143,7 +143,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void studySessionsAreSortedByAlphabeticalOrderByDefault() throws Exception {
+    void study_sessions_are_sorted_by_alphabetical_order_by_default() throws Exception {
         Stream.of("Guitar chords", "Flute chords").map(this::requestWithName).forEach(this::saveStudySession);
 
         mockMvc.perform(get("%s/filter?userId=%s".formatted(basePath(), authResponse.getId()))
@@ -155,7 +155,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCanEditNameAndCategoryOfTheirOwnStudySessions() throws Exception {
+    void users_can_edit_name_and_category_of_their_own_study_sessions() throws Exception {
         StudySessionResponse savedStudySession = saveStudySession(requestWithName("Guitar chords"));
         String newCategoryId = idFromCategoryWithName("Sports");
         var request = new StudySessionUpdateRequest(newCategoryId, "Water sports");
@@ -171,7 +171,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCannotEditStudySessionsFromOtherUsers() throws Exception {
+    void users_cannot_edit_study_sessions_that_belong_to_someone_else() throws Exception {
         AuthResponse secondUser = signup(new SignupRequest("second_user", "second@gmail.com", validPassword(), regularUser()));
         StudySessionResponse savedStudySession = saveStudySession(requestWithName("Guitar chords"));
 
@@ -186,7 +186,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void usersCannotEditStudySessionsWithNonExistentCategory() throws Exception {
+    void users_cannot_edit_a_study_session_with_a_non_existent_category() throws Exception {
         StudySessionResponse savedStudySession = saveStudySession(requestWithName("Guitar chords"));
         var request = new StudySessionUpdateRequest("Fake Category Id", savedStudySession.name());
 
