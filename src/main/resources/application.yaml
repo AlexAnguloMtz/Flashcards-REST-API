@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://${db.host}/${db.schema}
-    username: ${db.user}
-    password: ${db.password}
+    url: jdbc:mysql://${DB_HOST}/${DB_SCHEMA}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
 
   sql:
     init:
@@ -18,7 +18,7 @@ logging:
         security: DEBUG
 
 jwt:
-  secret: ${jwt.secret}
+  secret: ${JWT_SECRET}
 
 json:
   roles: /json/roles.json
