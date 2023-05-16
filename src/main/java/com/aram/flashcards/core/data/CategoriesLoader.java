@@ -25,7 +25,7 @@ public class CategoriesLoader implements CommandLineRunner {
     private JsonLoader loader;
 
     @Override
-    public void run(String... args) throws IOException {
+    public void run(String... args) {
         categoriesFrom(path).forEach(categoryService::save);
     }
 
