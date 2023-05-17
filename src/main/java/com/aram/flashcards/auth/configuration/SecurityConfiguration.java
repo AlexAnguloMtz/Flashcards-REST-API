@@ -31,7 +31,13 @@ class SecurityConfiguration {
         http.exceptionHandling(auth -> auth.authenticationEntryPoint(authenticationEntryPoint));
 
         http.authorizeHttpRequests()
-                .requestMatchers("/users/signup", "/users/login").permitAll()
+                .requestMatchers(
+                        "/v3/api-docs",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/users/signup",
+                        "/users/login"
+                ).permitAll()
                 .anyRequest().authenticated();
 
         return http.build();

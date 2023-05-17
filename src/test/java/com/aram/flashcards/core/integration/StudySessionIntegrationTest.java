@@ -135,7 +135,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     void users_can_get_all_their_study_sessions() throws Exception {
         Stream.of("Guitar chords", "Flute chords").map(this::requestWithName).forEach(this::saveStudySession);
 
-        mockMvc.perform(get("%s/filter?userId=%s".formatted(basePath(), authResponse.getId()))
+        mockMvc.perform(get("%s?userId=%s".formatted(basePath(), authResponse.getId()))
                .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isOk())
@@ -146,7 +146,7 @@ class StudySessionIntegrationTest extends AbstractIntegrationTest {
     void study_sessions_are_sorted_by_alphabetical_order_by_default() throws Exception {
         Stream.of("Guitar chords", "Flute chords").map(this::requestWithName).forEach(this::saveStudySession);
 
-        mockMvc.perform(get("%s/filter?userId=%s".formatted(basePath(), authResponse.getId()))
+        mockMvc.perform(get("%s?userId=%s".formatted(basePath(), authResponse.getId()))
                .header(AUTHORIZATION, headerWithToken(authResponse.getJwt()))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isOk())

@@ -241,7 +241,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void cannot_access_secured_endpoint_without_a_valid_authorization_header() throws Exception {
-        mockMvc.perform(get("/users/hello")
+        mockMvc.perform(get("/users/check")
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden())
                .andExpect(content().json("{\"error\":\"Cannot access secured endpoint without valid jwt\"}"));
@@ -249,7 +249,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void cannot_access_secured_endpoint_with_an_empty_json_web_token() throws Exception {
-        mockMvc.perform(get("/users/hello")
+        mockMvc.perform(get("/users/check")
                .header(AUTHORIZATION, "Bearer ")
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden())
@@ -258,7 +258,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void cannot_access_secured_endpoint_with_an_invalid_json_web_token() throws Exception {
-        mockMvc.perform(get("/users/hello")
+        mockMvc.perform(get("/users/check")
                .header(AUTHORIZATION, headerWithToken("This token is fake"))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden())
@@ -268,7 +268,7 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     @Test
     void cannot_access_secured_endpoint_with_a_modified_json_web_token() throws Exception {
         String validToken = tokenFrom(signup(validRequest()));
-        mockMvc.perform(get("/users/hello")
+        mockMvc.perform(get("/users/check")
                .header(AUTHORIZATION, headerWithToken(validToken + "A"))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isForbidden())
@@ -278,11 +278,11 @@ class UserIntegrationTest extends AbstractIntegrationTest {
     @Test
     void can_access_secured_endpoint_with_a_valid_json_web_token() throws Exception {
         String validToken = tokenFrom(signup(validRequest()));
-        mockMvc.perform(get("/users/hello")
+        mockMvc.perform(get("/users/check")
                .header(AUTHORIZATION, headerWithToken(validToken))
                .contentType(APPLICATION_JSON))
                .andExpect(status().isOk())
-               .andExpect(content().string("Hello"));
+               .andExpect(content().string("Server is up and running"));
     }
 
     @Test

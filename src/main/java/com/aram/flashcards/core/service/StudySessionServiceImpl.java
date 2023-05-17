@@ -16,8 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.Comparator;
 
 import static java.util.Comparator.comparing;
 
@@ -50,8 +49,8 @@ class StudySessionServiceImpl extends AbstractService implements StudySessionSer
     }
 
     @Override
-    public Iterable<StudySessionResponse> filter(Map<String, String> parameters) {
-        return findAllByUserId(parameters.get("userId")).stream()
+    public Iterable<StudySessionResponse> findAllByUserId(String userId) {
+        return studySessionRepository.findByUserId(userId).stream()
                 .map(this::responseFrom)
                 .sorted(comparing(StudySessionResponse::name))
                 .toList();
@@ -144,10 +143,6 @@ class StudySessionServiceImpl extends AbstractService implements StudySessionSer
 
     private StudySession saveAndReturn(StudySession studySession) {
         return studySessionRepository.save(studySession);
-    }
-
-    private Collection<StudySession> findAllByUserId(String userId) {
-        return studySessionRepository.findByUserId(userId);
     }
 
 }

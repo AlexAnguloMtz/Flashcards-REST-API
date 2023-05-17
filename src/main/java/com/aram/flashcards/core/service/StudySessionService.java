@@ -12,7 +12,7 @@ public interface StudySessionService {
 
     void deleteById(String id);
 
-    Iterable<StudySessionResponse> filter(Map<String, String> parameters);
+    Iterable<StudySessionResponse> findAllByUserId(String userId);
 
     StudySessionResponse update(String id, StudySessionUpdateRequest request);
 

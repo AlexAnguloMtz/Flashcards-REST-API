@@ -24,8 +24,4 @@ public class StudySession {
     private final String userId;
     private final String categoryId;
 
-    public boolean hasName(String name) {
-        return this.name.equals(name);
-    }
-
 }
