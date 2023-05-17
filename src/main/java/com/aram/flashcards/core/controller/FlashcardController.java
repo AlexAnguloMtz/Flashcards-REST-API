@@ -23,7 +23,6 @@ import static org.springframework.http.ResponseEntity.noContent;
 @RestController
 @RequestMapping("/flashcards")
 @Tag(name = "Flashcards")
-@SecurityRequirement(name = "bearerAuth")
 public class FlashcardController {
 
     @Autowired

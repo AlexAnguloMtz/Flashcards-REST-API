@@ -26,7 +26,6 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/study-sessions")
 @Tag(name = "Study sessions")
-@SecurityRequirement(name = "bearerAuth")
 public class StudySessionController {
 
     @Autowired

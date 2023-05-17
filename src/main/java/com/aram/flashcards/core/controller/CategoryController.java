@@ -24,7 +24,6 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/categories")
 @Tag(name = "Categories")
-@SecurityRequirement(name = "bearerAuth")
 public class CategoryController {
 
     @Autowired
