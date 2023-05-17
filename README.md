@@ -19,3 +19,6 @@ This is a REST API that allows users to organize their flashcards to study for t
 2) Use your JWT and user id to create a new study session
 3) Use your user id and the id of your study session to create some flashcards
 4) Use any other endpoint you like
+
+# Testing 
+This API was developed following the Test Driven Development (TDD) guidelines, that is the reason why it has almost 100% code coverage. 
