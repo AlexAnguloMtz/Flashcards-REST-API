@@ -16,6 +16,6 @@ This is a REST API that allows users to organize their flashcards to study for t
 
 # Basic points to interact with the API:
 1) Create a new user
-2) Use the JWT in the response to create a new study session
-3) Use the your user id and the id of your study session to create some flashcards 
+2) Use your JWT and user id to create a new study session
+3) Use your user id and the id of your study session to create some flashcards
 4) Use any other endpoint you like
