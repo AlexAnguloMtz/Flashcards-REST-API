@@ -1,10 +1,21 @@
+# App is deployed and running!
+- Visit the official Swagger UI API Docs: https://flashcards-rest-api-production.up.railway.app/swagger-ui/index.html
+- Or call the endpoints with some http client, base URL is: https://flashcards-rest-api-production.up.railway.app
+- If the app is slow, please be patient, it is running on a free service!
+
 # Overview 
 This is a REST API that allows users to organize their flashcards to study for their exams or learn new information about a topic they are interested in.
 
-# How to Run the App?
-1) Install Java 17
-2) Install MySQL
-3) Create a new database called 'flashcards'
-4) Modify the 'application.yaml' file to connect to MySQL with your local credentials. The URL should look like this: 'jdbc:mysql://localhost:8080/flashcards'
-5) Run the app.
-6) Test the endpoints with Postman or any other Http client.
+# Technologies:
+- Java 17
+- SpringBoot with Spring MVC, Spring JPA, Spring Security  
+- MySQL
+- JWT Authentication
+- Swagger UI (springdoc library)
+- Deployed for free on Railway
+
+# Basic points to interact with the API:
+1) Create a new user
+2) Use your JWT and user id to create a new study session
+3) Use your user id and the id of your study session to create some flashcards
+4) Use any other endpoint you like
