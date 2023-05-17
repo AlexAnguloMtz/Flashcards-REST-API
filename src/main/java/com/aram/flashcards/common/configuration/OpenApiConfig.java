@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 title = "Flashcards API",
                 version = "1.0"
         ),
-        servers = {@Server(url = "/", description = "Default Server URL")}
+        servers = {@Server(url = "https://flashcards-rest-api-production.up.railway.app", description = "Default Server URL")}
 )
 @SecurityScheme(
         name = "bearerAuth",
