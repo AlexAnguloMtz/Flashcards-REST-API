@@ -6,6 +6,14 @@
 # Overview 
 This is a REST API that allows users to organize their flashcards to study for their exams or learn new information about a topic they are interested in.
 
+# Technologies:
+- Java 17
+- SpringBoot with Spring MVC, Spring JPA, Spring Security  
+- MySQL
+- JWT Authentication
+- Swagger UI (springdoc library)
+- Deployed for free on Railway
+
 # Basic points to interact with the API:
 1) Create a new user
 2) Use the JWT in the response to create a new study session
