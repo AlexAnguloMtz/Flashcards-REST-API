@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -17,7 +18,8 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
                 description = "Flashcards API: An API for managing flashcards and study sessions",
                 title = "Flashcards API",
                 version = "1.0"
-        )
+        ),
+        servers = {@Server(url = "/", description = "Default Server URL")}
 )
 @SecurityScheme(
         name = "bearerAuth",
