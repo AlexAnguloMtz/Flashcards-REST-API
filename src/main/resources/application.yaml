@@ -23,4 +23,3 @@ jwt:
 json:
   roles: /json/roles.json
   categories: /json/categories.json
-
