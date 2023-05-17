@@ -52,7 +52,7 @@ public class CategoryController {
                     )
             }
     )
-    @GetMapping
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Iterable<Category>> findAll() {
         return ok(categoryService.findAll());
     }
