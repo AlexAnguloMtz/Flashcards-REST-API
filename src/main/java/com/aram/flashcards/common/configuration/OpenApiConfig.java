@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.info.Info;
                         url = "https://github.com/AlexAnguloMtz"
                 ),
                 description = "Flashcards API: An API for managing flashcards and study sessions",
-                title = "OpenAPI specification for Flashcards API",
+                title = "Flashcards API",
                 version = "1.0"
         )
 )
