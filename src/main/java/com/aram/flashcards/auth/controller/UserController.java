@@ -34,7 +34,7 @@ public class UserController {
     private UserService userService;
 
     @Operation(
-            description = "Endpoint to register new users",
+            description = "Endpoint to register new users (Available roles = ROLE_ADMIN, ROLE_USER)",
             summary = "Signup",
             responses = {
                     @ApiResponse(
