@@ -14,8 +14,11 @@ This is a REST API that allows users to organize their flashcards to study for t
 - Swagger UI (springdoc library)
 - Deployed for free on Railway
 
-# Basic points to interact with the API:
-1) Create a new user
+# Basic instructions to interact with the API:
+1) Create a new user with role "ROLE_ADMIN" (the other role is "ROLE_USER", but it has less privileges)
 2) Use your JWT and user id to create a new study session
 3) Use your user id and the id of your study session to create some flashcards
 4) Use any other endpoint you like
+
+# Testing 
+This API was developed following the Test Driven Development (TDD) guidelines, that is the reason why it has almost 100% code coverage. 
