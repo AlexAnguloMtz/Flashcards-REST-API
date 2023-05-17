@@ -1,6 +1,7 @@
 package com.aram.flashcards.common.controller;
 
 import com.aram.flashcards.common.exception.BaseException;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -18,6 +19,7 @@ public class BaseExceptionHandler {
         return new ResponseEntity<>(new ApiErrorMessage(exception.getMessage()), exception.status());
     }
 
+    @Hidden
     @ResponseBody
     @ResponseStatus(UNPROCESSABLE_ENTITY)
     @ExceptionHandler(MethodArgumentNotValidException.class)

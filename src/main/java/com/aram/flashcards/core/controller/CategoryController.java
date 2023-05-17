@@ -1,7 +1,6 @@
 package com.aram.flashcards.core.controller;
 
 import com.aram.flashcards.common.controller.ApiErrorMessage;
-import com.aram.flashcards.core.dto.FlashcardResponse;
 import com.aram.flashcards.core.model.Category;
 import com.aram.flashcards.core.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,7 +12,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,11 +50,9 @@ public class CategoryController {
                     )
             }
     )
-    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @GetMapping
     public ResponseEntity<Iterable<Category>> findAll() {
         return ok(categoryService.findAll());
     }
-
-
 
 }
