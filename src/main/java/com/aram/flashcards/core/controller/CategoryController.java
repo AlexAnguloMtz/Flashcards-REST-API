@@ -32,6 +32,7 @@ public class CategoryController {
     @Operation(
             description = "Get all categories",
             summary = "Get categories",
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Success",

@@ -34,6 +34,7 @@ public class StudySessionController {
     @Operation(
             description = "Endpoint to get all study sessions by user id",
             summary = "Get study sessions by user id",
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -61,6 +62,7 @@ public class StudySessionController {
     @Operation(
             description = "Endpoint to save a study session",
             summary = "Save study session",
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -104,6 +106,7 @@ public class StudySessionController {
     @Operation(
             description = "Endpoint to update a study session",
             summary = "Update study session",
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -150,6 +153,7 @@ public class StudySessionController {
     @Operation(
             description = "Endpoint to delete a study session",
             summary = "Delete study session",
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Study session was deleted successfully",

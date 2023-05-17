@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +106,7 @@ public class UserController {
     @Operation(
             description = "Endpoint to get all users",
             summary = "Get all users",
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -133,6 +135,7 @@ public class UserController {
     @Operation(
             description = "Endpoint to check if server is up and running",
             summary = "Check endpoint",
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -160,6 +163,7 @@ public class UserController {
     @Operation(
             description = "Endpoint to delete a user by username",
             summary = "Delete user",
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "User was deleted successfully",

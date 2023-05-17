@@ -31,6 +31,7 @@ public class FlashcardController {
     @Operation(
             description = "Endpoint to save a flashcard",
             summary = "Save flashcard",
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -66,6 +67,7 @@ public class FlashcardController {
     @Operation(
             description = "Endpoint to update a flashcard",
             summary = "Update flashcard",
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -104,6 +106,7 @@ public class FlashcardController {
     @Operation(
             description = "Endpoint to delete a flashcard",
             summary = "Delete flashcard",
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Flashcard was deleted successfully",
