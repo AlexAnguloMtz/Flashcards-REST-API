@@ -41,7 +41,7 @@ public class CategoryController {
                             )
                     ),
                     @ApiResponse(
-                            description = "Not an admin / Invalid json web token",
+                            description = "Invalid json web token",
                             responseCode = "403",
                             content = @Content(
                                     schema = @Schema(implementation = ApiErrorMessage.class),
