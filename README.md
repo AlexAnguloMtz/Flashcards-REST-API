@@ -28,4 +28,4 @@ This is a REST API that allows users to organize their flashcards to study for t
 5) User can perform CRUD operations for her own flashcards
 
 # Testing 
-This API was developed following the Test Driven Development (TDD) guidelines. Because of this, it has almost 100% code coverage. 
+This API was developed following the Test Driven Development (TDD) mantra. Because of this, it has almost 100% code coverage. 
