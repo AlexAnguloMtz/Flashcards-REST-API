@@ -1,13 +1,10 @@
-# Flashcards API
-REST API for students to manage their flashcards to study for exams or simply learn new things
-
 # The API is deployed and running
 - Visit the official Swagger UI API Docs: https://flashcards-rest-api-production.up.railway.app/swagger-ui/index.html
 - Or call the endpoints with some http client, the base URL is: https://flashcards-rest-api-production.up.railway.app
 - If the app is slow, please be patient, it is running on a free service!
 
-# Overview 
-This is a REST API that allows users to organize their flashcards to study for their exams or learn new information about a topic they are interested in.
+# Overview
+REST API for students to manage their flashcards to study for exams or simply learn new things
 
 # Technologies:
 - Java 17
