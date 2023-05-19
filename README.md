@@ -4,7 +4,7 @@
 - If the app is slow, please be patient, it is running on a free service!
 
 # Overview
-REST API for students to manage their flashcards to study for exams or simply learn new things
+REST API that allows students the management of their flashcards to study for exams or simply learn new things.
 
 # Technologies:
 - Java 17
