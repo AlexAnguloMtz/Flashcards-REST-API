@@ -20,5 +20,12 @@ This is a REST API that allows users to organize their flashcards to study for t
 3) Use your user id and the id of your study session to create some flashcards
 4) Use any other endpoint you like
 
+# Use cases of this API
+1) User can register
+2) User can log in
+3) User can get all categories
+4) User can perform CRUD operations for her own study sessions
+5) User can perform CRUD operations for her own flashcards
+
 # Testing 
 This API was developed following the Test Driven Development (TDD) guidelines, that is the reason why it has almost 100% code coverage. 
